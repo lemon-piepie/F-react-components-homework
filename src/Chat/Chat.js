@@ -28,10 +28,14 @@ class Chat extends Component {
   }
 
   findAnswerMessage = (message) => {
-    const answerMessage = answersData.find(
-      (answer) => answer.tags.find(
-        (question) => message.text.includes(question)
-    ));
+    let answerMessage = []
+    answersData.forEach(answer => {
+      answer.tags.forEach(tag => {
+        if (message.text.includes(tag)){
+          answerMessage = answerMessage.concat(answer)
+        }
+      })
+    })
     
     if(answerMessage != null){
       return answerMessage
@@ -50,7 +54,9 @@ class Chat extends Component {
     }, 1000);
 
     setTimeout(() => {
-      allMessage = allMessage.concat(this.findAnswerMessage(message))
+      if(this.findAnswerMessage(message)!=null){
+        allMessage = allMessage.concat(this.findAnswerMessage(message))
+      }  
       this.setState({
         shop: shopData,
         messages: allMessage,
